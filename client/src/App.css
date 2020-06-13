@@ -14,7 +14,7 @@
   box-shadow: none !important;
   border-top-left-radius: 6px;
   border-bottom-left-radius: 6px;
-  border: 2px solid black;
+  border: 1.5px solid black;
   border-right: 0;
 }
 .URL-input:focus {
@@ -27,7 +27,7 @@
   transition-duration: 0.4s;
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;
-  border: 2px solid black;
+  border: 1.5px solid black;
   border-left: 0;
 }
 .convert-button:hover {

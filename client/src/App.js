@@ -11,8 +11,6 @@ const App = () => {
   const [pl, setpl] = useState([]);
   const [idx, setidx] = useState(-1);
 
-  const [loading, setloading] = useState(false);
-
   const [err, seterr] = useState("");
 
   const download = (url, name) => {
@@ -27,7 +25,6 @@ const App = () => {
     const res = await axios.get("/getplaylist?pid=" + id);
     const data = res.data;
     console.log(data);
-    setloading(false);
 
     if (!("failed" in data)) {
       seterr("Songs:");
@@ -42,7 +39,7 @@ const App = () => {
         });
       }, 2000);
     } else {
-      seterr("id not valid");
+      seterr("Id not valid");
     }
   };
 
@@ -66,7 +63,7 @@ const App = () => {
       <div>
         <input
           className="URL-input"
-          placeholder="spotify playlist id"
+          placeholder="Enter playlist id"
           value={id}
           onChange={(e) => setid(e.target.value)}
         />
@@ -74,8 +71,7 @@ const App = () => {
           className="convert-button"
           onClick={() => {
             get_playlist();
-            setloading(true);
-            seterr("");
+            seterr("Fetching...");
           }}
         >
           Download
@@ -84,32 +80,28 @@ const App = () => {
 
       <h3>{err}</h3>
 
-      {loading ? (
-        <h1>Fetching...</h1>
-      ) : (
-        pl.map((x, i) => (
-          <div key={i} style={{ marginTop: 0, marginBottom: 0 }}>
-            <p
-              className="songs"
-              style={
-                i <= idx
-                  ? {
-                      color: "#0ed657",
-                      fontWeight: "lighter",
-                      fontFamily: "Verdana",
-                    }
-                  : {
-                      color: "gray",
-                      fontWeight: "lighter",
-                      fontFamily: "Verdana",
-                    }
-              }
-            >
-              {x}
-            </p>
-          </div>
-        ))
-      )}
+      {pl.map((x, i) => (
+        <div key={i} style={{ marginTop: 0, marginBottom: 0 }}>
+          <p
+            className="songs"
+            style={
+              i <= idx
+                ? {
+                    color: "#0ed657",
+                    fontWeight: "lighter",
+                    fontFamily: "Verdana",
+                  }
+                : {
+                    color: "gray",
+                    fontWeight: "lighter",
+                    fontFamily: "Verdana",
+                  }
+            }
+          >
+            {x}
+          </p>
+        </div>
+      ))}
       <div style={{ height: 1000 }}></div>
       <Par></Par>
     </div>
