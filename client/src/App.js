@@ -60,6 +60,7 @@ const App = () => {
       >
         Spotify PlayList Converter
       </h1>
+
       <div>
         <input
           className="URL-input"
@@ -77,8 +78,19 @@ const App = () => {
           Download
         </button>
       </div>
+      <p style={{ marginTop: 0 }}>
+        <small
+          style={{
+            fontWeight: "lighter",
+            fontFamily: "Verdana",
+            color: "gray",
+          }}
+        >
+          ℹ️ Click allow for multiple file download
+        </small>
+      </p>
 
-      <h3>{err}</h3>
+      <h3 style={{ fontWeight: "lighter", fontFamily: "Verdana" }}>{err}</h3>
 
       {pl.map((x, i) => (
         <div key={i} style={{ marginTop: 0, marginBottom: 0 }}>
