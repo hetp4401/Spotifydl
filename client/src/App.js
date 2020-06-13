@@ -114,7 +114,6 @@ const App = () => {
           </p>
         </div>
       ))}
-      <div style={{ height: 1000 }}></div>
       <Par></Par>
     </div>
   );
