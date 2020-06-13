@@ -83,10 +83,10 @@ const App = () => {
           style={{
             fontWeight: "lighter",
             fontFamily: "Verdana",
-            color: "gray",
+            color: "#1f1f1f",
           }}
         >
-          ℹ️ Click allow for multiple file download
+          * Click allow for multiple file download
         </small>
       </p>
 
