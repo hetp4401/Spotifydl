@@ -68,6 +68,7 @@ const App = () => {
         placeholder="spotify playlist id"
         value={id}
         onChange={(e) => setid(e.target.value)}
+        style={{ marginLeft: 30 }}
       />
       <button
         className="convert-button"
@@ -76,6 +77,7 @@ const App = () => {
           setloading(true);
           seterr("");
         }}
+        style={{ marginRight: 30 }}
       >
         Download
       </button>
