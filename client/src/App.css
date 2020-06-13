@@ -4,12 +4,11 @@
 
 .URL-input,
 .convert-button {
-  font-size: 1.3em;
   padding: 5px 10px;
   border: 0;
 }
 .URL-input {
-  width: 30em;
+  width: 40%;
   text-align: left;
   outline: none;
   box-shadow: none !important;

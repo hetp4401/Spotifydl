@@ -47,7 +47,7 @@ const App = () => {
   };
 
   return (
-    <div className="App" style={{ margin: 0 }}>
+    <div className="App" style={{ margin: 0, height: "100%" }}>
       <img
         src="https://www.freepnglogos.com/uploads/spotify-logo-png/spotify-download-logo-30.png"
         width="200"
@@ -63,22 +63,24 @@ const App = () => {
       >
         Spotify PlayList Converter
       </h1>
-      <input
-        className="URL-input"
-        placeholder="spotify playlist id"
-        value={id}
-        onChange={(e) => setid(e.target.value)}
-      />
-      <button
-        className="convert-button"
-        onClick={() => {
-          get_playlist();
-          setloading(true);
-          seterr("");
-        }}
-      >
-        Download
-      </button>
+      <div>
+        <input
+          className="URL-input"
+          placeholder="spotify playlist id"
+          value={id}
+          onChange={(e) => setid(e.target.value)}
+        />
+        <button
+          className="convert-button"
+          onClick={() => {
+            get_playlist();
+            setloading(true);
+            seterr("");
+          }}
+        >
+          Download
+        </button>
+      </div>
 
       <h3>{err}</h3>
 
@@ -108,7 +110,7 @@ const App = () => {
           </div>
         ))
       )}
-
+      <div style={{ height: 1000 }}></div>
       <Par></Par>
     </div>
   );
