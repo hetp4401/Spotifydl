@@ -17,14 +17,14 @@ const App = () => {
 
   const download = (url, name) => {
     if (ytdl.validateURL(url)) {
-      window.location.href = window.location.href = `http://localhost:4000/download?URL=${
+      window.location.href = window.location.href = `/download?URL=${
         "https://www.youtube.com/" + url
       }&name=${name}`;
     }
   };
 
   const get_playlist = async () => {
-    const res = await axios.get("http://localhost:4000/getplaylist?pid=" + id);
+    const res = await axios.get("/getplaylist?pid=" + id);
     const data = res.data;
     console.log(data);
     setloading(false);
