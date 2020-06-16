@@ -14,11 +14,9 @@ const App = () => {
   const [err, seterr] = useState("");
 
   const download = (url, name) => {
-    if (ytdl.validateURL(url)) {
-      window.location.href = window.location.href = `/download?URL=${
-        "https://www.youtube.com/" + url
-      }&name=${name}`;
-    }
+    
+      window.location.href = `/download?URL=${url}&name=${name}`;
+    
   };
 
   const get_playlist = async () => {
@@ -32,9 +30,13 @@ const App = () => {
 
       setTimeout(() => {
         data.forEach((x, i) => {
-          setTimeout(() => {
+          setTimeout(async () => {
             setidx(i);
-            download(x.url, x.name);
+
+            // download(x.url, x.name);
+            const dlink = await axios.get("/link?url=" + x.url);
+            console.log(x.name + " " + dlink.data);
+            download(dlink.data, x.name);
           }, 8000 * i);
         });
       }, 2000);

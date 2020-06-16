@@ -5,6 +5,9 @@ const app = express();
 const request = require("request");
 const exec = require("child_process").exec;
 
+const Parser = require("fast-html-parser");
+const https = require("https");
+
 app.use(cors());
 
 app.get("/getplaylist", (req, res) => {
@@ -102,11 +105,19 @@ app.get("/download", (req, res) => {
   res.setHeader("Content-Type", "audio/mpeg");
   res.header("Content-Disposition", 'attachment; filename="' + name + '.mp3"');
 
-  ytdl(URL, {
-    format: "mp3",
-    filter: "audioonly",
-    quality: "highest",
-  }).pipe(res);
+  https.get(URL, (response) => {
+    response.pipe(res);
+  });
+});
+
+app.get("/link", (req, res) => {
+  const url = req.query.url;
+  request("https://www.320youtube.com/v1/" + url, (err, re, body) => {
+    const html = Parser.parse(body);
+    const durl = html.querySelector("#download").querySelector("a")
+      .rawAttributes.href;
+    res.send(durl);
+  });
 });
 
 if (process.env.NODE_ENV === "production") {
