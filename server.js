@@ -105,9 +105,13 @@ app.get("/download", (req, res) => {
   res.setHeader("Content-Type", "audio/mpeg");
   res.header("Content-Disposition", 'attachment; filename="' + name + '.mp3"');
 
-  https.get(URL, (response) => {
-    response.pipe(res);
-  });
+  try {
+    https.get(URL, (response) => {
+      response.pipe(res);
+    });
+  } catch (error) {
+    res.send({ failed: "failed" });
+  }
 });
 
 app.get("/link", (req, res) => {
