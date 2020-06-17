@@ -14,9 +14,7 @@ const App = () => {
   const [err, seterr] = useState("");
 
   const download = (url, name) => {
-    
-      window.location.href = `/download?URL=${url}&name=${name}`;
-    
+    window.location.href = `/download?URL=${url}&name=${name}`;
   };
 
   const get_playlist = async () => {
@@ -32,12 +30,10 @@ const App = () => {
         data.forEach((x, i) => {
           setTimeout(async () => {
             setidx(i);
-
-            // download(x.url, x.name);
             const dlink = await axios.get("/link?url=" + x.url);
             console.log(x.name + " " + dlink.data);
             download(dlink.data, x.name);
-          }, 8000 * i);
+          }, 3000 * i);
         });
       }, 2000);
     } else {
