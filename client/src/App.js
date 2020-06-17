@@ -20,7 +20,6 @@ const App = () => {
   const get_playlist = async () => {
     const res = await axios.get("/getplaylist?pid=" + id);
     const data = res.data;
-    console.log(data);
 
     if (!("failed" in data)) {
       seterr("Songs:");
@@ -31,9 +30,8 @@ const App = () => {
           setTimeout(async () => {
             setidx(i);
             const dlink = await axios.get("/link?url=" + x.url);
-            console.log(x.name + " " + dlink.data);
             download(dlink.data, x.name);
-          }, 6000 * i);
+          }, 5000 * i);
         });
       }, 2000);
     } else {
@@ -56,7 +54,7 @@ const App = () => {
           fontFamily: "Verdana",
         }}
       >
-        Spotify PlayList Converter
+        Spotify Playlist Converter
       </h1>
 
       <div>
