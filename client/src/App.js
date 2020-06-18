@@ -37,12 +37,12 @@ const App = () => {
   };
 
   return (
-    <div className="App" style={{ margin: 0, height: "100%" }}>
+    <div className="App">
       <img
         src="https://www.freepnglogos.com/uploads/spotify-logo-png/spotify-download-logo-30.png"
         width="200"
         height="200"
-        style={{ marginTop: 30 }}
+        style={{ marginTop: 60 }}
         alt="spotify logo"
       />
       <h1
@@ -81,7 +81,7 @@ const App = () => {
             color: "#696969",
           }}
         >
-          * Allow multiple file download
+          * allow multiple file download
         </small>
       </p>
 
