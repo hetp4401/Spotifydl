@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const ytdl = require("ytdl-core");
 const app = express();
 const request = require("request");
 const exec = require("child_process").exec;
