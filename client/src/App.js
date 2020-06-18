@@ -60,7 +60,7 @@ const App = () => {
           placeholder="Enter playlist id"
           value={id}
           onChange={(e) => setid(e.target.value)}
-          style={{ color: "#00bd3f" }}
+          style={{ color: "#00db49" }}
         />
         <button
           className="convert-button"
@@ -78,7 +78,7 @@ const App = () => {
           style={{
             fontWeight: "lighter",
             fontFamily: "Verdana",
-            color: "#808080",
+            color: "#696969",
           }}
         >
           * Click allow for multiple file download
