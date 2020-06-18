@@ -110,7 +110,7 @@ const App = () => {
       ))}
 
       {!clicked ? (
-        <div style={{ marginTop: "20%", fontFamily: "Verdana" }}>
+        <div style={{ marginTop: "50%", fontFamily: "Verdana" }}>
           Try it on mobile! Downloads playlist straight to your device!
         </div>
       ) : (
