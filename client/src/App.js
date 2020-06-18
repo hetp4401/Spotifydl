@@ -60,7 +60,7 @@ const App = () => {
           placeholder="Enter playlist id"
           value={id}
           onChange={(e) => setid(e.target.value)}
-          style={{ color: "#00db49" }}
+          style={{ color: "#18d860" }}
         />
         <button
           className="convert-button"
