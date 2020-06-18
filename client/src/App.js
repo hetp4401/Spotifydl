@@ -2,16 +2,12 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./App.css";
 
-import Par from "./Par";
-
-const ytdl = require("ytdl-core");
-
 const App = () => {
   const [id, setid] = useState("");
   const [pl, setpl] = useState([]);
   const [idx, setidx] = useState(-1);
-
   const [err, seterr] = useState("");
+  const [clicked, setclicked] = useState(false);
 
   const download = (url, name) => {
     window.location.href = `/download?URL=${url}&name=${name}`;
@@ -63,12 +59,14 @@ const App = () => {
           placeholder="Enter playlist id"
           value={id}
           onChange={(e) => setid(e.target.value)}
+          style={{ color: "#00bd3f" }}
         />
         <button
           className="convert-button"
           onClick={() => {
             get_playlist();
             seterr("Fetching...");
+            setclicked(true);
           }}
         >
           Download
@@ -79,7 +77,7 @@ const App = () => {
           style={{
             fontWeight: "lighter",
             fontFamily: "Verdana",
-            color: "#1f1f1f",
+            color: "#808080",
           }}
         >
           * Click allow for multiple file download
@@ -110,7 +108,14 @@ const App = () => {
           </p>
         </div>
       ))}
-      <Par></Par>
+
+      {!clicked ? (
+        <div style={{ marginTop: "20%", fontFamily: "Verdana" }}>
+          Try it on mobile! Downloads playlist straight to your device!
+        </div>
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 };
