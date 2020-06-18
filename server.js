@@ -4,9 +4,10 @@ const ytdl = require("ytdl-core");
 const app = express();
 const request = require("request");
 const exec = require("child_process").exec;
-
 const Parser = require("fast-html-parser");
 const https = require("https");
+
+require("dotenv").config();
 
 app.use(cors());
 
@@ -18,18 +19,15 @@ app.get("/getplaylist", (req, res) => {
   const playlist = [];
   var token = "";
 
-  exec(
-    'curl -H "Authorization: Basic MzMzOWRhYTU3NWExNDA0NTgyNjE1ZGYwNWExODIyZjQ6MDA0NWNkNWZiM2VmNDI4Yzk4YTdjYmFjZGI3MzdmYTg=" -d grant_type=refresh_token -d refresh_token=AQBPkKRuCCS2UwEFjXu0GR7kxzl-9RKM8cxg1RBc_D_CiN-7YvLhGqE8K4entrfji3hLg2YvqvFEUjecCFuYSIvm_zF1QeZEnCGCVqrQUZudY0stf9gc2ajyV1hplDFaHJw https://accounts.spotify.com/api/token',
-    (err, stdout, std) => {
-      token = JSON.parse(stdout).access_token;
-      start();
-    }
-  );
+  exec(process.env.ST1, (err, stdout, std) => {
+    token = JSON.parse(stdout).access_token;
+    start();
+  });
 
   const start = () => {
     request(
       {
-        url: "https://api.spotify.com/v1/playlists/" + pid,
+        url: process.env.ST2 + pid,
         method: "GET",
         headers: {
           Authorization: "Bearer " + token,
@@ -51,8 +49,7 @@ app.get("/getplaylist", (req, res) => {
   const get_songs = (n) => {
     request(
       {
-        url:
-          "https://api.spotify.com/v1/playlists/" + pid + "/tracks?offset=" + n,
+        url: process.env.ST2 + pid + process.env.ST3 + n,
         method: "GET",
         headers: {
           Authorization: "Bearer " + token,
@@ -72,11 +69,7 @@ app.get("/getplaylist", (req, res) => {
         const xartist = x.track.album.artists[0].name;
 
         request(
-          "https://www.youtube.com/results?search_query=" +
-            xname +
-            " " +
-            xartist +
-            " lyrics",
+          process.env.YT1 + xname + " " + xartist + " lyrics",
           (err, re, body) => {
             rtotal += 1;
             if (body) {
@@ -116,7 +109,7 @@ app.get("/download", (req, res) => {
 
 app.get("/link", (req, res) => {
   const url = req.query.url;
-  request("https://www.320youtube.com/v1/" + url, (err, re, body) => {
+  request(process.env.YT2 + url, (err, re, body) => {
     const html = Parser.parse(body);
     const durl = html.querySelector("#download").querySelector("a")
       .rawAttributes.href;
