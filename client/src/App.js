@@ -81,7 +81,7 @@ const App = () => {
             color: "#696969",
           }}
         >
-          * Click allow for multiple file download
+          * Allow multiple file download
         </small>
       </p>
 
