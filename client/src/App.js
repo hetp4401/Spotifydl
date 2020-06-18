@@ -28,7 +28,6 @@ const App = () => {
             setidx(i);
             const dlink = await axios.get("/link?url=" + x.url);
             download(dlink.data, x.name);
-            //console.log(x.name + " " + dlink.data);
           }, 6000 * i);
         });
       }, 2000);
