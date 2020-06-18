@@ -100,7 +100,7 @@ const App = () => {
             style={
               i <= idx
                 ? {
-                    color: "#0ed657",
+                    color: "#18d860",
                     fontWeight: "lighter",
                     fontFamily: "Verdana",
                   }
