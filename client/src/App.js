@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 import MediaQuery from "react-responsive";
+import ReactGa from "react-ga";
 
 const App = () => {
   const [id, setid] = useState("");
@@ -35,6 +36,11 @@ const App = () => {
       seterr("Id not valid");
     }
   };
+
+  useEffect(() => {
+    ReactGa.initialize("UA-170046601-1");
+    ReactGa.pageview("/");
+  }, []);
 
   return (
     <div className="App">
