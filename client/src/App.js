@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./App.css";
+import MediaQuery from "react-responsive";
 
 const App = () => {
   const [id, setid] = useState("");
   const [pl, setpl] = useState([]);
   const [idx, setidx] = useState(-1);
   const [err, seterr] = useState("");
-  const [clicked, setclicked] = useState(false);
 
   const download = (url, name) => {
     window.location.href = `/download?URL=${url}&name=${name}`;
@@ -66,7 +66,6 @@ const App = () => {
           onClick={() => {
             get_playlist();
             seterr("Fetching...");
-            setclicked(true);
           }}
         >
           Download
@@ -109,13 +108,11 @@ const App = () => {
         </div>
       ))}
 
-      {!clicked ? (
-        <div style={{ marginTop: "50%", fontFamily: "Verdana" }}>
+      <MediaQuery maxDeviceWidth={1224}>
+        <div style={{ marginTop: "20%", fontFamily: "Verdana" }}>
           Try it on mobile! Downloads playlist straight to your device!
         </div>
-      ) : (
-        <div></div>
-      )}
+      </MediaQuery>
     </div>
   );
 };
