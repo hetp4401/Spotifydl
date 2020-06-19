@@ -67,24 +67,21 @@ app.get("/getplaylist", (req, res) => {
         const xname = x.track.name.replace(/[<>":\/|?*]/g, "");
         const xartist = x.track.album.artists[0].name;
 
-        request(
-          process.env.YT1 + xname + " " + xartist + " lyrics",
-          (err, re, body) => {
-            rtotal += 1;
-            if (body) {
-              const index = body.indexOf("watch?v=");
-              const xurl = body.substring(index, index + 19);
-              playlist.push({
-                name: xname,
-                artist: xartist,
-                url: xurl,
-              });
-              if (rtotal === TOTAL) {
-                res.send(playlist);
-              }
+        request(process.env.YT1 + xname + " lyrics", (err, re, body) => {
+          rtotal += 1;
+          if (body) {
+            const index = body.indexOf("watch?v=");
+            const xurl = body.substring(index, index + 19);
+            playlist.push({
+              name: xname,
+              artist: xartist,
+              url: xurl,
+            });
+            if (rtotal === TOTAL) {
+              res.send(playlist);
             }
           }
-        );
+        });
       });
     };
   };
