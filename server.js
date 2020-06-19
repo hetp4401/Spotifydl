@@ -40,6 +40,7 @@ app.get("/getplaylist", (req, res) => {
             for (var i = 0; i < Math.ceil(TOTAL / 100); i++) get_songs(i * 100);
           } catch (error) {
             res.send({ failed: "no such playlist" });
+            
           }
         }
       }
