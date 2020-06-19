@@ -13,7 +13,6 @@ app.use(cors());
 app.get("/getplaylist", (req, res) => {
   var pid = req.query.pid;
 
-
   var TOTAL = 0;
   var rtotal = 0;
   const playlist = [];
@@ -40,7 +39,6 @@ app.get("/getplaylist", (req, res) => {
             for (var i = 0; i < Math.ceil(TOTAL / 100); i++) get_songs(i * 100);
           } catch (error) {
             res.send({ failed: "no such playlist" });
-            
           }
         }
       }
@@ -111,10 +109,14 @@ app.get("/download", (req, res) => {
 app.get("/link", (req, res) => {
   const url = req.query.url;
   request(process.env.YT2 + url, (err, re, body) => {
-    const html = Parser.parse(body);
-    const durl = html.querySelector("#download").querySelector("a")
-      .rawAttributes.href;
-    res.send(durl);
+    try {
+      const html = Parser.parse(body);
+      const durl = html.querySelector("#download").querySelector("a")
+        .rawAttributes.href;
+      res.send(durl);
+    } catch (error) {
+      res.send("");
+    }
   });
 });
 
