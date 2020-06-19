@@ -36,6 +36,7 @@ app.get("/getplaylist", (req, res) => {
         if (!err) {
           try {
             TOTAL = JSON.parse(body).tracks.total;
+
             for (var i = 0; i < Math.ceil(TOTAL / 100); i++) get_songs(i * 100);
           } catch (error) {
             res.send({ failed: "no such playlist" });
@@ -68,7 +69,16 @@ app.get("/getplaylist", (req, res) => {
         const xartist = x.track.album.artists[0].name;
 
         request(
-          process.env.YT1 + xname + " " + xartist.substring(0, 20) + " lyrics",
+          {
+            url:
+              process.env.YT1 +
+              xname +
+              " " +
+              xartist.substring(0, 20) +
+              " lyrics",
+            method: "GET",
+          },
+
           (err, re, body) => {
             rtotal += 1;
             if (body) {
@@ -79,14 +89,15 @@ app.get("/getplaylist", (req, res) => {
                 artist: xartist,
                 url: xurl,
               });
-              //console.log(playlist.length + " - " + TOTAL);
-              if (rtotal === TOTAL) {
-                res.send(playlist);
-              }
+            }
+            if (rtotal === TOTAL) {
+              res.send(playlist);
             }
           }
         );
       });
+
+      console.log("went through all " + items.length);
     };
   };
 });
