@@ -93,6 +93,7 @@ app.get("/getplaylist", (req, res) => {
             if (rtotal === TOTAL) {
               res.send(playlist);
             }
+            
           }
         );
       });
