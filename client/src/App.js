@@ -70,10 +70,14 @@ const App = () => {
         />
         <button
           className="convert-button"
-          onClick={() => {
+          onClick={(e) => {
             get_playlist();
             seterr("Fetching...");
             setclicked(false);
+            ReactGa.event({
+              category: "download",
+              action: "user clicked download",
+            });
           }}
         >
           Download
