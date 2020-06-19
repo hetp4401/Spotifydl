@@ -79,6 +79,7 @@ app.get("/getplaylist", (req, res) => {
                 artist: xartist,
                 url: xurl,
               });
+              //console.log(playlist.length + " - " + TOTAL);
               if (rtotal === TOTAL) {
                 res.send(playlist);
               }
