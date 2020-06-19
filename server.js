@@ -13,7 +13,6 @@ app.use(cors());
 app.get("/getplaylist", (req, res) => {
   var pid = req.query.pid;
 
-  if (pid.length != 22) res.send({ failed: "no such playlist" });
 
   var TOTAL = 0;
   var rtotal = 0;
