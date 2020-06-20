@@ -1,24 +1,23 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const request = require("request");
+
 const exec = require("child_process").exec;
-const Parser = require("fast-html-parser");
 const https = require("https");
+const request = require("request");
+const Parser = require("fast-html-parser");
 
 require("dotenv").config();
 
 app.use(cors());
 
-app.get("/getplaylist", (req, res) => {
+app.get("/gpl", (req, res) => {
   var pid = req.query.pid;
-
   var TOTAL = 0;
-  var rtotal = 0;
-  const playlist = [];
+  var playlist = [];
   var token = "";
 
-  exec(process.env.ST1, (err, stdout, std) => {
+  exec(process.env.T1, (err, stdout, std) => {
     token = JSON.parse(stdout).access_token;
     start();
   });
@@ -26,20 +25,18 @@ app.get("/getplaylist", (req, res) => {
   const start = () => {
     request(
       {
-        url: process.env.ST2 + pid,
+        url: process.env.T2 + pid,
         method: "GET",
         headers: {
           Authorization: "Bearer " + token,
         },
       },
-      (err, re, body) => {
-        if (!err) {
-          try {
-            TOTAL = JSON.parse(body).tracks.total;
-            for (var i = 0; i < Math.ceil(TOTAL / 100); i++) get_songs(i * 100);
-          } catch (error) {
-            res.send({ failed: "no such playlist" });
-          }
+      (e, r, b) => {
+        try {
+          TOTAL = JSON.parse(b).tracks.total;
+          for (var i = 0; i < Math.ceil(TOTAL / 100); i++) get_songs(i * 100);
+        } catch (error) {
+          res.send({ failed: "no such playlist" });
         }
       }
     );
@@ -48,72 +45,38 @@ app.get("/getplaylist", (req, res) => {
   const get_songs = (n) => {
     request(
       {
-        url: process.env.ST2 + pid + process.env.ST3 + n,
+        url: process.env.T2 + pid + process.env.T3 + n,
         method: "GET",
         headers: {
           Authorization: "Bearer " + token,
         },
       },
-      (err, re, body) => {
-        add_song_to_playlist(body);
+      (e, r, b) => {
+        const json = JSON.parse(b);
+        const items = json.items;
+
+        items.forEach((x) => {
+          const xname = x.track.name.replace(/[<>":\/|?*]/g, "");
+          const xartist = x.track.album.artists[0].name;
+
+          playlist.push({ name: xname, artist: xartist });
+        });
+
+        if (playlist.length === TOTAL) res.send(playlist);
       }
     );
-
-    const add_song_to_playlist = (body) => {
-      const json = JSON.parse(body);
-      const items = json.items;
-
-      items.forEach((x) => {
-        const xname = x.track.name.replace(/[<>":\/|?*]/g, "");
-        const xartist = x.track.album.artists[0].name;
-
-        playlist.push({ name: xname, artist: xartist });
-
-        // request(
-        //   {
-        //     url:
-        //       process.env.YT1 +
-        //       xname +
-        //       " " +
-        //       xartist.substring(0, 20) +
-        //       " lyrics",
-        //     method: "GET",
-        //   },
-
-        //   (err, re, body) => {
-        //     rtotal += 1;
-        //     if (body) {
-        //       const index = body.indexOf("watch?v=");
-        //       const xurl = body.substring(index, index + 19);
-        //       playlist.push({
-        //         name: xname,
-        //         artist: xartist,
-        //         url: xurl,
-        //       });
-        //     }
-        //     if (rtotal === TOTAL) {
-        //       res.send(playlist);
-        //     }
-        //   }
-        // );
-      });
-
-      if (playlist.length === TOTAL) res.send(playlist);
-    };
   };
 });
 
-app.get("/download", (req, res) => {
-  var URL = req.query.URL;
+app.get("/dl", (req, res) => {
+  var url = req.query.url;
   var name = req.query.name;
 
   res.setHeader("Content-Type", "audio/mpeg");
   res.header("Content-Disposition", 'attachment; filename="' + name + '.mp3"');
 
   try {
-    https.get(URL, (response) => {
-      response.pipe(res);
-    });
+    https.get(url, (response) => response.pipe(res));
   } catch (error) {
     res.send({ failed: "failed" });
   }
@@ -125,17 +88,29 @@ app.get("/gdl", (req, res) => {
 
   try {
     request(
-      process.env.YT1 + name + " " + artist.substring(0, 20) + " lyrics",
+      {
+        url: process.env.T4 + name + " " + artist.substring(0, 20) + " lyrics",
+        method: "GET",
+        timeout: 6000,
+      },
+
       (e, r, b1) => {
         if (b1) {
           const index = b1.indexOf("watch?v=");
           const url = b1.substring(index, index + 19);
-          request(process.env.YT2 + url, (e, r, b2) => {
-            const html = Parser.parse(b2);
-            const durl = html.querySelector("#download").querySelector("a")
-              .rawAttributes.href;
-            res.send(durl);
-          });
+
+          request(
+            {
+              url: process.env.T5 + url,
+              method: "GET",
+            },
+            (e, r, b2) => {
+              const html = Parser.parse(b2);
+              const durl = html.querySelector("#download").querySelector("a")
+                .rawAttributes.href;
+              res.send(durl);
+            }
+          );
         }
       }
     );

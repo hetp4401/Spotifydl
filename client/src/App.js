@@ -11,31 +11,23 @@ const App = () => {
   const [err, seterr] = useState("");
   const [clicked, setclicked] = useState(true);
 
-  const download = (url, name) => {
-    window.location.href = `/download?URL=${url}&name=${name}`;
-  };
-
   const get_playlist = async () => {
-    const res = await axios.get("/getplaylist?pid=" + id);
+    const res = await axios.get("/gpl?pid=" + id);
     const data = res.data;
 
     if (!("failed" in data)) {
       seterr("Songs:");
       setpl(data.map((x) => x.name));
 
-      setTimeout(() => {
-        data.forEach((x, i) => {
-          setTimeout(async () => {
-            setidx(i);
-
-            const dlink = await axios.get(
-              "/gdl?name=" + x.name + "&artist=" + x.artist
-            );
-
-            download(dlink.data, x.name);
-          }, 7000 * i);
-        });
-      }, 2000);
+      data.forEach((x, i) => {
+        setTimeout(async () => {
+          setidx(i);
+          const res = await axios.get(
+            "/gdl?name=" + x.name + "&artist=" + x.artist
+          );
+          window.location.href = "/dl?url=" + res.data + "&name=" + x.name;
+        }, 7000 * i);
+      });
     } else {
       seterr("Id not valid");
     }
