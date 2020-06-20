@@ -12,15 +12,19 @@ require("dotenv").config();
 app.use(cors());
 
 app.get("/gpl", (req, res) => {
-  var pid = req.query.pid;
-  var TOTAL = 0;
-  var playlist = [];
-  var token = "";
+  try {
+    var pid = req.query.pid;
+    var TOTAL = 0;
+    var playlist = [];
+    var token = "";
 
-  exec(process.env.T1, (err, stdout, std) => {
-    token = JSON.parse(stdout).access_token;
-    start();
-  });
+    exec(process.env.T1, (err, stdout, std) => {
+      token = JSON.parse(stdout).access_token;
+      start();
+    });
+  } catch (error) {
+    res.send({ failed: "no such playlist" });
+  }
 
   const start = () => {
     request(
@@ -52,17 +56,21 @@ app.get("/gpl", (req, res) => {
         },
       },
       (e, r, b) => {
-        const json = JSON.parse(b);
-        const items = json.items;
+        try {
+          const json = JSON.parse(b);
+          const items = json.items;
 
-        items.forEach((x) => {
-          const xname = x.track.name.replace(/[<>":\/|?*]/g, "");
-          const xartist = x.track.album.artists[0].name;
+          items.forEach((x) => {
+            const xname = x.track.name.replace(/[<>":\/|?*]/g, "");
+            const xartist = x.track.album.artists[0].name;
 
-          playlist.push({ name: xname, artist: xartist });
-        });
+            playlist.push({ name: xname, artist: xartist });
+          });
 
-        if (playlist.length === TOTAL) res.send(playlist);
+          if (playlist.length === TOTAL) res.send(playlist);
+        } catch (error) {
+          res.send({ failed: "no such playlist" });
+        }
       }
     );
   };
@@ -85,16 +93,16 @@ app.get("/dl", (req, res) => {
 });
 
 app.get("/gdl", (req, res) => {
-  try {
-    const name = req.query.name;
-    const artist = req.query.artist;
-    request(
-      {
-        url: process.env.T4 + name + " " + artist.substring(0, 15) + " lyrics",
-        method: "GET",
-        timeout: 6000,
-      },
-      (e, r, b1) => {
+  const name = req.query.name;
+  const artist = req.query.artist;
+  request(
+    {
+      url: process.env.T4 + name + " " + artist.substring(0, 15) + " lyrics",
+      method: "GET",
+      timeout: 6000,
+    },
+    (e, r, b1) => {
+      try {
         if (b1) {
           const index = b1.indexOf(process.env.T6);
           const url = b1.substring(index, index + 19);
@@ -105,18 +113,22 @@ app.get("/gdl", (req, res) => {
               method: "GET",
             },
             (e, r, b2) => {
-              const html = Parser.parse(b2);
-              const durl = html.querySelector("#download").querySelector("a")
-                .rawAttributes.href;
-              res.send(durl);
+              try {
+                const html = Parser.parse(b2);
+                const durl = html.querySelector("#download").querySelector("a")
+                  .rawAttributes.href;
+                res.send(durl);
+              } catch (error) {
+                res.send("");
+              }
             }
           );
         }
+      } catch (error) {
+        res.send("");
       }
-    );
-  } catch (error) {
-    res.send("");
-  }
+    }
+  );
 });
 
 if (process.env.NODE_ENV === "production") {
