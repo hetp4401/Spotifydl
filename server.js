@@ -93,9 +93,7 @@ app.get("/dl", (req, res) => {
       'attachment; filename="' + name + '.mp3"'
     );
     https.get(url, (response) => response.pipe(res));
-  } catch (error) {
-    res.send({ failed: "failed" });
-  }
+  } catch (error) {}
 });
 
 app.get("/gdl", (req, res) => {
