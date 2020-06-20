@@ -69,13 +69,15 @@ app.get("/gpl", (req, res) => {
 });
 
 app.get("/dl", (req, res) => {
-  var url = req.query.url;
-  var name = req.query.name;
-
-  res.setHeader("Content-Type", "audio/mpeg");
-  res.header("Content-Disposition", 'attachment; filename="' + name + '.mp3"');
-
   try {
+    var url = req.query.url;
+    var name = req.query.name;
+
+    res.setHeader("Content-Type", "audio/mpeg");
+    res.header(
+      "Content-Disposition",
+      'attachment; filename="' + name + '.mp3"'
+    );
     https.get(url, (response) => response.pipe(res));
   } catch (error) {
     res.send({ failed: "failed" });
@@ -83,10 +85,9 @@ app.get("/dl", (req, res) => {
 });
 
 app.get("/gdl", (req, res) => {
-  const name = req.query.name;
-  const artist = req.query.artist;
-
   try {
+    const name = req.query.name;
+    const artist = req.query.artist;
     request(
       {
         url: process.env.T4 + name + " " + artist.substring(0, 15) + " lyrics",
