@@ -89,7 +89,7 @@ app.get("/gdl", (req, res) => {
   try {
     request(
       {
-        url: process.env.T4 + name + " " + artist.substring(0, 20) + " lyrics",
+        url: process.env.T4 + name + " lyrics",
         method: "GET",
         timeout: 6000,
       },
