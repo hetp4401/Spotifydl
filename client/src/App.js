@@ -28,6 +28,7 @@ const App = () => {
           window.location.href = "/dl?url=" + res.data + "&name=" + x.name;
         }, 7000 * i);
       });
+      
     } else {
       seterr("Id not valid");
     }
