@@ -32,7 +32,7 @@
 }
 .convert-button:hover {
   background-color: black;
-  color: #18d860;
+  color: #00ff60;
   cursor: pointer;
   border-color: black;
 }
@@ -62,7 +62,7 @@
 }
 
 ::placeholder {
-  color: #00ff60;
+  color: #18d860;
   opacity: 1;
 }
 
