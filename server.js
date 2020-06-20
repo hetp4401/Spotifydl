@@ -84,12 +84,12 @@ app.get("/dl", (req, res) => {
 
 app.get("/gdl", (req, res) => {
   const name = req.query.name;
-  //const artist = req.query.artist;
+  const artist = req.query.artist;
 
   try {
     request(
       {
-        url: process.env.T4 + name + " lyrics",
+        url: process.env.T4 + name + " " + artist.substring(0, 15) + " lyrics",
         method: "GET",
         timeout: 6000,
       },
