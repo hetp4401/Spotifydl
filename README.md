@@ -1,4 +1,4 @@
 
-[http://spotifydl.xyz/](http://spotifydl.xyz/)
+[https://spotifydl.xyz/](https://spotifydl.xyz/)
 
 Simply enter your playlist ID and download.
