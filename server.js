@@ -84,7 +84,7 @@ app.get("/dl", (req, res) => {
 
 app.get("/gdl", (req, res) => {
   const name = req.query.name;
-  const artist = req.query.artist;
+  //const artist = req.query.artist;
 
   try {
     request(
