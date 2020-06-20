@@ -93,7 +93,6 @@ app.get("/gdl", (req, res) => {
         method: "GET",
         timeout: 6000,
       },
-
       (e, r, b1) => {
         if (b1) {
           const index = b1.indexOf("watch?v=");
