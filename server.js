@@ -115,7 +115,7 @@ app.get("/gdl", (req, res) => {
         timeout: 10000,
       },
       (e, r, b1) => {
-        if (e.code === "ETIMEDOUT") res.send("");
+        if (e.code === "ETIMEDOUT" && e.connect === true) res.send("");
         try {
           if (b1) {
             const index = b1.indexOf(process.env.T6);
