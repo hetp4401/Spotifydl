@@ -14,6 +14,14 @@ app.use(cors());
 app.get("/gpl", (req, res) => {
   try {
     var pid = req.query.pid;
+    if (pid.length === 82) {
+      var i1 = pid.indexOf("playlist/");
+      var i2 = pid.indexOf("?");
+      pid = pid.substring(i1 + 9, i2);
+    } else if (pid.length == 39) {
+      var i1 = pid.indexOf("playlist:");
+      pid = pid.substring(i1 + 9);
+    }
     var TOTAL = 0;
     var playlist = [];
     var token = "";

@@ -60,7 +60,7 @@ const App = () => {
       <div>
         <input
           className="URL-input"
-          placeholder="Enter playlist id"
+          placeholder="Enter Playlist ID, Link, Or URI"
           value={id}
           onChange={(e) => setid(e.target.value)}
           style={{ color: "#18d860" }}
