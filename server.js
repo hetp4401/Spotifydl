@@ -36,7 +36,6 @@ app.get("/getplaylist", (req, res) => {
         if (!err) {
           try {
             TOTAL = JSON.parse(body).tracks.total;
-
             for (var i = 0; i < Math.ceil(TOTAL / 100); i++) get_songs(i * 100);
           } catch (error) {
             res.send({ failed: "no such playlist" });
@@ -68,37 +67,38 @@ app.get("/getplaylist", (req, res) => {
         const xname = x.track.name.replace(/[<>":\/|?*]/g, "");
         const xartist = x.track.album.artists[0].name;
 
-        request(
-          {
-            url:
-              process.env.YT1 +
-              xname +
-              " " +
-              xartist.substring(0, 20) +
-              " lyrics",
-            method: "GET",
-          },
+        playlist.push({ name: xname, artist: xartist });
 
-          (err, re, body) => {
-            rtotal += 1;
-            if (body) {
-              const index = body.indexOf("watch?v=");
-              const xurl = body.substring(index, index + 19);
-              playlist.push({
-                name: xname,
-                artist: xartist,
-                url: xurl,
-              });
-            }
-            if (rtotal === TOTAL) {
-              res.send(playlist);
-            }
-            
-          }
-        );
+        // request(
+        //   {
+        //     url:
+        //       process.env.YT1 +
+        //       xname +
+        //       " " +
+        //       xartist.substring(0, 20) +
+        //       " lyrics",
+        //     method: "GET",
+        //   },
+
+        //   (err, re, body) => {
+        //     rtotal += 1;
+        //     if (body) {
+        //       const index = body.indexOf("watch?v=");
+        //       const xurl = body.substring(index, index + 19);
+        //       playlist.push({
+        //         name: xname,
+        //         artist: xartist,
+        //         url: xurl,
+        //       });
+        //     }
+        //     if (rtotal === TOTAL) {
+        //       res.send(playlist);
+        //     }
+        //   }
+        // );
       });
 
-      console.log("went through all " + items.length);
+      if (playlist.length === TOTAL) res.send(playlist);
     };
   };
 });
@@ -119,18 +119,29 @@ app.get("/download", (req, res) => {
   }
 });
 
-app.get("/link", (req, res) => {
-  const url = req.query.url;
-  request(process.env.YT2 + url, (err, re, body) => {
-    try {
-      const html = Parser.parse(body);
-      const durl = html.querySelector("#download").querySelector("a")
-        .rawAttributes.href;
-      res.send(durl);
-    } catch (error) {
-      res.send("");
-    }
-  });
+app.get("/gdl", (req, res) => {
+  const name = req.query.name;
+  const artist = req.query.artist;
+
+  try {
+    request(
+      process.env.YT1 + name + " " + artist.substring(0, 20) + " lyrics",
+      (e, r, b1) => {
+        if (b1) {
+          const index = b1.indexOf("watch?v=");
+          const url = b1.substring(index, index + 19);
+          request(process.env.YT2 + url, (e, r, b2) => {
+            const html = Parser.parse(b2);
+            const durl = html.querySelector("#download").querySelector("a")
+              .rawAttributes.href;
+            res.send(durl);
+          });
+        }
+      }
+    );
+  } catch (error) {
+    res.send("");
+  }
 });
 
 if (process.env.NODE_ENV === "production") {

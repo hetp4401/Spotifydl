@@ -27,7 +27,11 @@ const App = () => {
         data.forEach((x, i) => {
           setTimeout(async () => {
             setidx(i);
-            const dlink = await axios.get("/link?url=" + x.url);
+
+            const dlink = await axios.get(
+              "/gdl?name=" + x.name + "&artist=" + x.artist
+            );
+
             download(dlink.data, x.name);
           }, 7000 * i);
         });
