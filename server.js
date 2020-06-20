@@ -112,9 +112,10 @@ app.get("/gdl", (req, res) => {
       {
         url: process.env.T4 + name + " " + artist.substring(0, 15) + " lyrics",
         method: "GET",
-        timeout: 6000,
+        timeout: 10000,
       },
       (e, r, b1) => {
+        if (e.code === "ETIMEDOUT") res.send("");
         try {
           if (b1) {
             const index = b1.indexOf(process.env.T6);
