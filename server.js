@@ -95,7 +95,7 @@ app.get("/gdl", (req, res) => {
       },
       (e, r, b1) => {
         if (b1) {
-          const index = b1.indexOf("watch?v=");
+          const index = b1.indexOf(process.env.T6);
           const url = b1.substring(index, index + 19);
 
           request(
