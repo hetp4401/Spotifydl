@@ -14,7 +14,7 @@
   box-shadow: none !important;
   border-top-left-radius: 6px;
   border-bottom-left-radius: 6px;
-  border: 1.5px solid black;
+  border: 1.5px solid #171717;
   border-right: 0;
 }
 .URL-input:focus {
@@ -22,19 +22,19 @@
 }
 
 .convert-button {
-  background-color: black;
+  background-color: #171717;
   color: white;
   transition-duration: 0.4s;
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;
-  border: 1.5px solid black;
+  border: 1.5px solid #171717;
   border-left: 0;
 }
 .convert-button:hover {
-  background-color: black;
+  background-color: #171717;
   color: #00ff60;
   cursor: pointer;
-  border-color: black;
+  border-color: #171717;
 }
 
 .convert-button:focus {
