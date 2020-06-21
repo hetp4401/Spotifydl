@@ -45,6 +45,7 @@ app.get("/gpl", (req, res) => {
           },
         },
         (e, r, b) => {
+          if (e) res.send({ failed: "no such playlist" });
           try {
             TOTAL = JSON.parse(b).tracks.total;
             for (var i = 0; i < Math.ceil(TOTAL / 100); i++) get_songs(i * 100);
@@ -69,6 +70,7 @@ app.get("/gpl", (req, res) => {
           },
         },
         (e, r, b) => {
+          if (e) res.send({ failed: "no such playlist" });
           try {
             const json = JSON.parse(b);
             const items = json.items;
@@ -126,6 +128,7 @@ app.get("/gdl", (req, res) => {
               method: "GET",
             },
             (e, r, b2) => {
+              if (e) res.send("");
               try {
                 const html = Parser.parse(b2);
                 const durl = html.querySelector("#download").querySelector("a")
