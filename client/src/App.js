@@ -26,7 +26,7 @@ const App = () => {
             "/gdl?name=" + x.name + "&artist=" + x.artist
           );
           window.location.href = "/dl?url=" + res.data + "&name=" + x.name;
-        }, 7000 * i);
+        }, 7500 * i);
       });
       
     } else {
