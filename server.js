@@ -43,12 +43,15 @@ app.get("/gpl", (req, res) => {
         },
       },
       (e, r, b) => {
-        if (e) res.send({ failed: "no such playlist" });
-        try {
-          total = JSON.parse(b).tracks.total;
-          for (var i = 0; i < Math.ceil(total / 100); i++) get_songs(i * 100);
-        } catch (error) {
+        if (e) {
           res.send({ failed: "no such playlist" });
+        } else {
+          try {
+            total = JSON.parse(b).tracks.total;
+            for (var i = 0; i < Math.ceil(total / 100); i++) get_songs(i * 100);
+          } catch (error) {
+            res.send({ failed: "no such playlist" });
+          }
         }
       }
     );
@@ -64,24 +67,27 @@ app.get("/gpl", (req, res) => {
         },
       },
       (e, r, b) => {
-        if (e) res.send({ failed: "no such playlist" });
-        try {
-          const json = JSON.parse(b);
-          const items = json.items;
-
-          items.forEach((x) => {
-            try {
-              const xname = x.track.name.replace(/[<>":\/|?*]/g, "");
-              const xartist = x.track.album.artists[0].name;
-
-              playlist.push({ name: xname, artist: xartist });
-            } catch (error) {
-              fail += 1;
-            }
-          });
-          if (playlist.length === total - fail) res.send(playlist);
-        } catch (error) {
+        if (e) {
           res.send({ failed: "no such playlist" });
+        } else {
+          try {
+            const json = JSON.parse(b);
+            const items = json.items;
+
+            items.forEach((x) => {
+              try {
+                const xname = x.track.name.replace(/[<>":\/|?*]/g, "");
+                const xartist = x.track.album.artists[0].name;
+
+                playlist.push({ name: xname, artist: xartist });
+              } catch (error) {
+                fail += 1;
+              }
+            });
+            if (playlist.length === total - fail) res.send(playlist);
+          } catch (error) {
+            res.send({ failed: "no such playlist" });
+          }
         }
       }
     );
@@ -107,39 +113,37 @@ app.get("/gdl", (req, res) => {
     {
       url: process.env.T4 + name + " " + artist.substring(0, 15) + " lyrics",
       method: "GET",
-      timeout: 18000,
+      timeout: 12000,
     },
     (e, r, b) => {
-      try {
-        if (e) res.send("");
-        const index = b.indexOf(process.env.T6);
-        const que = b.substring(index, index + 19);
-        get_dl(que);
-      } catch (error) {
+      if (e) {
         res.send("");
+      } else {
+        const index = b.indexOf(process.env.T6);
+        const query = b.substring(index, index + 19);
+        request(
+          {
+            url: process.env.T5 + query,
+            method: "GET",
+          },
+          (e2, r2, b2) => {
+            if (e2) {
+              res.send("");
+            } else {
+              try {
+                const html = Parser.parse(b2);
+                const dl = html.querySelector("#download").querySelector("a")
+                  .rawAttributes.href;
+                res.send(dl);
+              } catch (error) {
+                res.send("");
+              }
+            }
+          }
+        );
       }
     }
   );
-
-  const get_dl = (que) => {
-    request(
-      {
-        url: process.env.T5 + que,
-        method: "GET",
-      },
-      (e, r, b) => {
-        if (e) res.send("");
-        try {
-          const html = Parser.parse(b);
-          const durl = html.querySelector("#download").querySelector("a")
-            .rawAttributes.href;
-          res.send(durl);
-        } catch (error) {
-          res.send("");
-        }
-      }
-    );
-  };
 });
 
 if (process.env.NODE_ENV === "production") {
