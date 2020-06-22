@@ -107,7 +107,7 @@ app.get("/gdl", (req, res) => {
     {
       url: process.env.T4 + name + " " + artist.substring(0, 15) + " lyrics",
       method: "GET",
-      timeout: 10000,
+      timeout: 18000,
     },
     (e1, r, b1) => {
       try {
