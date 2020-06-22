@@ -111,8 +111,13 @@ app.get("/gdl", (req, res) => {
     },
     (e1, r, b1) => {
       if (e1) res.send("");
-      const index = b1.indexOf(process.env.T6);
-      const url = b1.substring(index, index + 19);
+      var url = "";
+      try {
+        const index = b1.indexOf(process.env.T6);
+        url = b1.substring(index, index + 19);
+      } catch (error) {
+        res.send("");
+      }
 
       request(
         {
