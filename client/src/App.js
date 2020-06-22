@@ -25,9 +25,10 @@ const App = () => {
           const res = await axios.get(
             "/gdl?name=" + x.name + "&artist=" + x.artist
           );
-
-          window.location.href = "/dl?url=" + res.data + "&name=" + x.name;
-          //const req = axios.get("/dl?url=" + res.data + "&name=" + x.name);
+          const url = res.data;
+          if (url !== "") {
+            window.location.href = "/dl?url=" + url + "&name=" + x.name;
+          }
         }, 7500 * i);
       });
     } else {
