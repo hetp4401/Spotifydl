@@ -110,31 +110,27 @@ app.get("/gdl", (req, res) => {
       timeout: 18000,
     },
     (e1, r, b1) => {
-      try {
-        if (e1) res.send("");
-        const index = b1.indexOf(process.env.T6);
-        const url = b1.substring(index, index + 19);
+      if (e1) res.send("");
+      const index = b1.indexOf(process.env.T6);
+      const url = b1.substring(index, index + 19);
 
-        request(
-          {
-            url: process.env.T5 + url,
-            method: "GET",
-          },
-          (e2, r, b2) => {
-            if (e2) res.send("");
-            try {
-              const html = Parser.parse(b2);
-              const durl = html.querySelector("#download").querySelector("a")
-                .rawAttributes.href;
-              res.send(durl);
-            } catch (error) {
-              res.send("");
-            }
+      request(
+        {
+          url: process.env.T5 + url,
+          method: "GET",
+        },
+        (e2, r, b2) => {
+          if (e2) res.send("");
+          try {
+            const html = Parser.parse(b2);
+            const durl = html.querySelector("#download").querySelector("a")
+              .rawAttributes.href;
+            res.send(durl);
+          } catch (error) {
+            res.send("");
           }
-        );
-      } catch (error) {
-        res.send("");
-      }
+        }
+      );
     }
   );
 });
