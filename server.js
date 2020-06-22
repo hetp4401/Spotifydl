@@ -99,17 +99,15 @@ app.get("/dl", (req, res) => {
     var url = req.query.url;
     var name = req.query.name;
 
-    if (url === "") {
-      res.send("test");
-    } else {
-      res.header(
-        "Content-Disposition",
-        'attachment; filename="' + name + '.mp3"'
-      );
-      https.get(url, { timeout: 7500 }, (response) => {
-        response.pipe(res);
-      });
-    }
+    if (url === "") url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+
+    res.header(
+      "Content-Disposition",
+      'attachment; filename="' + name + '.mp3"'
+    );
+    https.get(url, { timeout: 7500 }, (response) => {
+      response.pipe(res);
+    });
   } catch (error) {}
 });
 
