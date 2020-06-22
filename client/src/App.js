@@ -29,7 +29,6 @@ const App = () => {
         
         }, 7500 * i);
       });
-      
     } else {
       seterr("Id not valid");
     }
