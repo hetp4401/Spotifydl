@@ -27,10 +27,9 @@ const App = () => {
           );
           const url = res.data;
           if (url !== "") {
-            //window.location.href = "/dl?url=" + url + "&name=" + x.name;
-            axios.get("/dl?url=" + url + "&name=" + x.name);
+            window.location.href = "/dl?url=" + url + "&name=" + x.name;
           }
-        }, 7500 * i);
+        }, 6000 * i);
       });
     } else {
       seterr("Id not valid");
