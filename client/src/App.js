@@ -30,7 +30,7 @@ const App = () => {
             //window.location.href = "/dl?url=" + url + "&name=" + x.name;
             axios.get("/dl?url=" + url + "&name=" + x.name);
           }
-        }, 0 * i);
+        }, 7500 * i);
       });
     } else {
       seterr("Id not valid");
