@@ -29,7 +29,7 @@ const App = () => {
           if (url !== "") {
             window.location.href = "/dl?url=" + url + "&name=" + x.name;
           }
-        }, 6000 * i);
+        }, 7500 * i);
       });
     } else {
       seterr("Id not valid");
