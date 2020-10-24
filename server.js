@@ -103,8 +103,9 @@ app.get("/dl", (req, res) => {
       "Content-Disposition",
       'attachment; filename="' + name + '.mp3"'
     );
-
-    request(url).pipe(res);
+    https.get(url, { timeout: 7500 }, (response) => {
+      response.pipe(res);
+    });
   } catch (error) {}
 });
 
@@ -154,3 +155,4 @@ if (process.env.NODE_ENV === "production") {
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log("working on 8080..."));
+
