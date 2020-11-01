@@ -34,63 +34,72 @@ app.get("/gpl", (req, res) => {
   });
 
   const start = () => {
-    request(
-      {
-        url: process.env.T2 + pid,
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + token,
+    try {
+      request(
+        {
+          url: process.env.T2 + pid,
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + token,
+          },
         },
-      },
-      (e, r, b) => {
-        if (e) {
-          res.send({ failed: "no such playlist" });
-        } else {
-          try {
-            total = JSON.parse(b).tracks.total;
-            for (var i = 0; i < Math.ceil(total / 100); i++) get_songs(i * 100);
-          } catch (error) {
+        (e, r, b) => {
+          if (e) {
             res.send({ failed: "no such playlist" });
+          } else {
+            try {
+              total = JSON.parse(b).tracks.total;
+              for (var i = 0; i < Math.ceil(total / 100); i++)
+                get_songs(i * 100);
+            } catch (error) {
+              res.send({ failed: "no such playlist" });
+            }
           }
         }
-      }
-    );
+      );
+    } catch (error) {
+      res.send({ failed: "no such playlist" });
+    }
   };
 
   const get_songs = (n) => {
-    request(
-      {
-        url: process.env.T2 + pid + process.env.T3 + n,
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + token,
+    try {
+      request(
+        {
+          url: process.env.T2 + pid + process.env.T3 + n,
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + token,
+          },
         },
-      },
-      (e, r, b) => {
-        if (e) {
-          res.send({ failed: "no such playlist" });
-        } else {
-          try {
-            const json = JSON.parse(b);
-            const items = json.items;
-
-            items.forEach((x) => {
-              try {
-                const xname = x.track.name.replace(/[<>":\/|?*]/g, "");
-                const xartist = x.track.album.artists[0].name;
-
-                playlist.push({ name: xname, artist: xartist });
-              } catch (error) {
-                fail += 1;
-              }
-            });
-            if (playlist.length === total - fail) res.send(playlist);
-          } catch (error) {
+        (e, r, b) => {
+          if (e) {
             res.send({ failed: "no such playlist" });
+          } else {
+            try {
+              const json = JSON.parse(b);
+              const items = json.items;
+
+              items.forEach((x) => {
+                try {
+                  const xname = x.track.name.replace(/[<>":\/|?*]/g, "");
+                  const xartist = x.track.album.artists[0].name;
+
+                  playlist.push({ name: xname, artist: xartist });
+                } catch (error) {
+                  fail += 1;
+                }
+              });
+              if (playlist.length === total - fail) res.send(playlist);
+            } catch (error) {
+              res.send({ failed: "no such playlist" });
+            }
           }
         }
-      }
-    );
+      );
+    } catch (error) {
+      res.send({ failed: "no such playlist" });
+    }
   };
 });
 
@@ -112,41 +121,45 @@ app.get("/dl", (req, res) => {
 app.get("/gdl", (req, res) => {
   const name = req.query.name;
   const artist = req.query.artist;
-  request(
-    {
-      url: process.env.T4 + name + " " + artist.substring(0, 15) + " lyrics",
-      method: "GET",
-      timeout: 12000,
-    },
-    (e, r, b) => {
-      if (e) {
-        res.send("");
-      } else {
-        const index = b.indexOf(process.env.T6);
-        const query = b.substring(index, index + 19);
-        request(
-          {
-            url: process.env.T5 + query,
-            method: "GET",
-          },
-          (e2, r2, b2) => {
-            if (e2) {
-              res.send("");
-            } else {
-              try {
-                const html = Parser.parse(b2);
-                const dl = html.querySelector("#download").querySelector("a")
-                  .rawAttributes.href;
-                res.send(dl);
-              } catch (error) {
+  try {
+    request(
+      {
+        url: process.env.T4 + name + " " + artist.substring(0, 15) + " lyrics",
+        method: "GET",
+        timeout: 12000,
+      },
+      (e, r, b) => {
+        if (e) {
+          res.send("");
+        } else {
+          const index = b.indexOf(process.env.T6);
+          const query = b.substring(index, index + 19);
+          request(
+            {
+              url: process.env.T5 + query,
+              method: "GET",
+            },
+            (e2, r2, b2) => {
+              if (e2) {
                 res.send("");
+              } else {
+                try {
+                  const html = Parser.parse(b2);
+                  const dl = html.querySelector("#download").querySelector("a")
+                    .rawAttributes.href;
+                  res.send(dl);
+                } catch (error) {
+                  res.send("");
+                }
               }
             }
-          }
-        );
+          );
+        }
       }
-    }
-  );
+    );
+  } catch (error) {
+    res.send("");
+  }
 });
 
 if (process.env.NODE_ENV === "production") {
@@ -155,4 +168,3 @@ if (process.env.NODE_ENV === "production") {
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log("working on 8080..."));
-
