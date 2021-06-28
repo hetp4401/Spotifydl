@@ -134,24 +134,9 @@ app.get("/gdl", (req, res) => {
         } else {
           const index = b.indexOf(process.env.T6);
           const query = b.substring(index, index + 19);
-          request(
-            {
-              url: process.env.T5 + query,
-              method: "GET",
-            },
-            (e2, r2, b2) => {
-              if (e2) {
-                res.send("");
-              } else {
-                try {
-                  const html = Parser.parse(b2);
-                  const dl = html.querySelector("#download").querySelector("a")
-                    .rawAttributes.href;
-                  res.send(dl);
-                } catch (error) {
-                  res.send("");
-                }
-              }
+          getDownload("https://www.youtube.com/watch?v=" + query).then(
+            (dlink) => {
+              res.send(dlink);
             }
           );
         }
@@ -161,6 +146,39 @@ app.get("/gdl", (req, res) => {
     res.send("");
   }
 });
+
+const rp = require("request-promise");
+
+function getToken(youtube) {
+  return rp("https://yt1s.com/api/ajaxSearch/index", {
+    form: {
+      q: youtube,
+      vt: "mp3",
+    },
+    method: "POST",
+  }).then((body) => {
+    const json = JSON.parse(body);
+    const { kc, vid } = json;
+    return { kc, vid };
+  });
+}
+
+function getUrl({ kc, vid }) {
+  return rp("https://yt1s.com/api/ajaxConvert/convert", {
+    form: {
+      k: kc,
+      vid: vid,
+    },
+    method: "POST",
+  }).then((res) => {
+    const json = JSON.parse(res);
+    return json.dlink;
+  });
+}
+
+function getDownload(youtube) {
+  return getToken(youtube).then((token) => getUrl(token));
+}
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
