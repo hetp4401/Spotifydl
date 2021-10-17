@@ -1,5 +1,5 @@
 const rp = require("request-promise");
-const parse = require("fast-html-parser").parse;
+const { parse } = require("fast-html-parser");
 
 function getMp3(url) {
   return rp("https://www.fastconv.com/models/convertProcess.php", {
@@ -19,6 +19,21 @@ function getMp3(url) {
   });
 }
 
+function getMp3s2(url) {
+  return rp("https://y2convert.net/convert?url=" + url).then((body) => {
+    const html = parse(body);
+
+    const links = html
+      .querySelector("tbody")
+      .querySelectorAll("tr")
+      .map(
+        (x) => x.querySelectorAll("td")[2].querySelector("a").rawAttributes.href
+      );
+
+    return links[0];
+  });
+}
+
 function getYoutubeTop(name, artist) {
   return rp(
     `https://www.youtube.com/results?search_query=${name} lyrics ${artist}`
@@ -32,7 +47,7 @@ function getYoutubeTop(name, artist) {
 }
 
 function getDownload(name, artist) {
-  return getYoutubeTop(name, artist).then((url) => getMp3(url));
+  return getYoutubeTop(name, artist).then((url) => getMp3s2(url));
 }
 
 module.exports = { getDownload };
