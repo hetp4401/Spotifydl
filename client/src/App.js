@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import "./App.css";
 import MediaQuery from "react-responsive";
 import ReactGa from "react-ga";
@@ -13,6 +12,10 @@ const App = () => {
   const get_playlist = () => {
     fetch("/api/playlist?id=" + id)
       .then((res) => res.json())
+      .then((json) => {
+        if (json.error) throw Error;
+        return json;
+      })
       .then((playlist) => {
         setpl(playlist);
         seterr("Songs:");

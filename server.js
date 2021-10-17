@@ -23,7 +23,7 @@ app.get("/api/playlist", (req, res) => {
       res.status(200).json(playlist);
     })
     .catch((err) => {
-      res.status(400).send({ message: "Error retrieving playlist" });
+      res.status(400).send({ error: "Error retrieving playlist" });
     });
 });
 
@@ -40,7 +40,7 @@ app.get("/api/download", (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.status(400).send({ message: "Error retrieving download link" });
+      res.status(400).send({ error: "Error retrieving download link" });
     });
 });
 
