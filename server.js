@@ -9,7 +9,11 @@ const { getDownload } = require("./youtube");
 
 app.get("/api/playlist", (req, res) => {
   var id = req.query.id;
-  if (id.length === 82) {
+  if (id.startsWith("https://open.spotify.com/playlist/")) {
+    var i1 = id.indexOf("https://open.spotify.com/playlist/") + 34;
+    var i2 = id.indexOf("?", 34);
+    id = id.substring(i1, i2);
+  } else if (id.length === 82) {
     var i1 = id.indexOf("playlist/");
     var i2 = id.indexOf("?");
     id = id.substring(i1 + 9, i2);
