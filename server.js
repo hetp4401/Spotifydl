@@ -1,3 +1,4 @@
+const https = require("https");
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -32,9 +33,13 @@ app.get("/api/download", (req, res) => {
 
   getDownload(name, artist)
     .then((link) => {
-      res.status(301).redirect(link);
+      res.header("Content-Disposition", `attachment; filename="${name}.mp3"`);
+      https.get(link, function (response) {
+        response.pipe(res);
+      });
     })
     .catch((err) => {
+      console.log(err);
       res.status(400).send({ message: "Error retrieving download link" });
     });
 });
