@@ -36,7 +36,9 @@ function getMp3s2(url) {
 
 function getYoutubeTop(name, artist) {
   return rp(
-    `https://www.youtube.com/results?search_query=${name} lyrics ${artist}`
+    encodeURI(
+      `https://www.youtube.com/results?search_query=${name} lyrics ${artist}`
+    )
   ).then((body) => {
     const idx = body.indexOf("/watch?v=") + 9;
     const idx2 = body.indexOf('"', idx);
