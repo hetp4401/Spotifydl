@@ -17,6 +17,7 @@
   "dependencies": {
     "archiver": "^5.0.2",
     "concurrently": "^5.2.0",
+    "content-disposition": "^0.5.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",

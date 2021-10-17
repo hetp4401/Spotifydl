@@ -1,4 +1,6 @@
 const https = require("https");
+const contentDisposition = require("content-disposition");
+
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -37,7 +39,7 @@ app.get("/api/download", (req, res) => {
 
   getDownload(name, artist)
     .then((link) => {
-      res.header("Content-Disposition", `attachment; filename="${name}.mp3"`);
+      res.header("Content-Disposition", contentDisposition(`${name}.mp3`));
       https.get(link, function (response) {
         response.pipe(res);
       });
