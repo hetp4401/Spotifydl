@@ -7,33 +7,20 @@ import ReactGa from "react-ga";
 const App = () => {
   const [id, setid] = useState("");
   const [pl, setpl] = useState([]);
-  const [idx, setidx] = useState(-1);
   const [err, seterr] = useState("");
   const [clicked, setclicked] = useState(true);
 
-  const get_playlist = async () => {
-    const res = await axios.get("/gpl?pid=" + id);
-    const data = res.data;
-
-    if (!("failed" in data)) {
-      seterr("Songs:");
-      setpl(data.map((x) => x.name));
-
-      data.forEach((x, i) => {
-        setTimeout(async () => {
-          setidx(i);
-          const res = await axios.get(
-            "/gdl?name=" + x.name + "&artist=" + x.artist
-          );
-          const url = res.data;
-          if (url !== "") {
-            window.location.href = "/dl?url=" + url + "&name=" + x.name;
-          }
-        }, 7500 * i);
+  const get_playlist = () => {
+    fetch("/api/playlist?id=" + id)
+      .then((res) => res.json())
+      .then((playlist) => {
+        setpl(playlist);
+        seterr("Songs:");
+      })
+      .catch((err) => {
+        seterr("Id not valid");
+        setpl([]);
       });
-    } else {
-      seterr("Id not valid");
-    }
   };
 
   useEffect(() => {
@@ -89,9 +76,7 @@ const App = () => {
             fontFamily: "Verdana",
             color: "#696969",
           }}
-        >
-          * allow multiple file download
-        </small>
+        ></small>
       </p>
 
       <h3 style={{ fontWeight: "lighter", fontFamily: "Verdana" }}>{err}</h3>
@@ -100,22 +85,17 @@ const App = () => {
         <div key={i} style={{ marginTop: 0, marginBottom: 0 }}>
           <p
             className="songs"
-            style={
-              i <= idx
-                ? {
-                    color: "#18d860",
-                    fontWeight: "lighter",
-                    fontFamily: "Verdana",
-                  }
-                : {
-                    color: "gray",
-                    fontWeight: "lighter",
-                    fontFamily: "Verdana",
-                  }
-            }
+            style={{
+              color: "#18d860",
+              fontWeight: "lighter",
+              fontFamily: "Verdana",
+            }}
           >
-            {x}
+            {x.name}
           </p>
+          <a href={`/api/download?name=${x.name}&artist=${x.artist}`}>
+            Download
+          </a>
         </div>
       ))}
 
